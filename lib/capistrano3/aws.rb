@@ -25,3 +25,5 @@ module Capistrano3
     end
   end
 end
+
+self.extend Capistrano::Aws

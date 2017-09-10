@@ -1,7 +1,10 @@
 namespace :load do
   task :defaults do
-    set :ssm_params_prefix, -> { "/environments/#{fetch(:stage)}/services/#{fetch(:application)}/deployment" }
     set :aws_region, "us-east-1"
+
+    set :ssm_params_prefix, -> do
+      "/environments/#{fetch(:stage)}/services/#{fetch(:application)}/deployment"
+    end
   end
 end
 
@@ -18,9 +21,10 @@ namespace :deploy do
         end
       end
 
-      update_ssm_parameter("#{fetch(:ssm_params_prefix)}/revision", current_revision)
-      update_ssm_parameter("#{fetch(:ssm_params_prefix)}/release_slug", release_name)
-      puts "UPDATED:: AWS SSM parameters to REVISION: #{current_revision}, RELEASE: #{release_name}"    
+      Capistrano3::Aws.update_ssm_parameter("#{fetch(:ssm_params_prefix)}/revision", current_revision)
+      Capistrano3::Aws.update_ssm_parameter("#{fetch(:ssm_params_prefix)}/release_slug", release_name)
+
+      puts "UPDATED:: AWS SSM parameters to REVISION: #{current_revision}, RELEASE: #{release_name}"
     end
   end
 end

@@ -12,7 +12,7 @@ module Capistrano3
         .describe_instances(filters: filters)
         .reservations
         .map(&:instances)
-        .map(&:first)
+        .flatten
         .map(&map_attribute)
     end
 
